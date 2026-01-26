@@ -31,6 +31,9 @@ pub enum Message {
     LaunchManagerApp,
     LaunchAboutApp,
     LaunchCosmicSettings,
+    LockSession,
+    RebootSystem,
+    ShutdownSystem,
 }
 
 /// Create a COSMIC application from the app model
@@ -101,13 +104,35 @@ impl cosmic::Application for AppModel {
     /// The applet's popup window will be drawn using this view method. If there are
     /// multiple poups, you may match the id parameter to determine which popup to
     /// create a view for.
+    /// See: https://pop-os.github.io/libcosmic/cosmic/widget/index.html
+    /// See: https://github.com/pop-os/cosmic-icons/tree/master
     fn view_window(&self, _id: Id) -> Element<'_, Self::Message> {
+        let about_button = widget::button::text(fl!("about-row"))
+            .on_press(Message::LaunchAboutApp);
+
+        let parameters_button = widget::button::text(fl!("parameters-row"))
+            .on_press(Message::LaunchCosmicSettings);
+
+        let lock_button = widget::button::icon(widget::icon::from_name("system-lock-screen-symbolic"))
+            .on_press(Message::LockSession);
+
+        let reboot_button = widget::button::icon(widget::icon::from_name("system-reboot-symbolic"))
+            .on_press(Message::RebootSystem);
+
+        let shutdown_button = widget::button::icon(widget::icon::from_name("system-shutdown-symbolic"))
+            .on_press(Message::ShutdownSystem);
+
         let content_list = widget::list_column()
             .padding(5)
             .spacing(0)
             .add(widget::button::text(fl!("curios-manager-row")).on_press(Message::LaunchManagerApp))
-            .add(widget::button::text(fl!("about-row")).on_press(Message::LaunchAboutApp))
-            .add(widget::button::text(fl!("parameters-row")).on_press(Message::LaunchCosmicSettings))
+            .add(widget::column()
+                .push(parameters_button)
+                .push(about_button))
+            .add(widget::row()
+                .push(lock_button)
+                .push(reboot_button)
+                .push(shutdown_button))
             ;
 
         self.core.applet.popup_container(content_list).into()
@@ -203,6 +228,24 @@ impl cosmic::Application for AppModel {
                 // Launch cosmic-settings parameters.
                 let _ = std::process::Command::new("/run/current-system/sw/bin/cosmic-settings")
                     .arg("desktop")
+                    .spawn();
+            }
+            Message::LockSession => {
+                // Launch lock session command.
+                let _ = std::process::Command::new("/run/current-system/sw/bin/loginctl")
+                    .arg("lock-session")
+                    .spawn();
+            }
+            Message::RebootSystem => {
+                // Launch a reboot command.
+                let _ = std::process::Command::new("/run/current-system/sw/bin/systemctl")
+                    .arg("reboot")
+                    .spawn();
+            }
+            Message::ShutdownSystem => {
+                // Launch a shutdown command.
+                let _ = std::process::Command::new("/run/current-system/sw/bin/systemctl")
+                    .arg("poweroff")
                     .spawn();
             }
         }

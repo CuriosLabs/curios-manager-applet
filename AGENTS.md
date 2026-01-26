@@ -1,0 +1,77 @@
+# CuriOS Manager Applet Development Guide
+
+This guide provides instructions and best practices for developers contributing
+to the curios-manager-applet project. It is a NixOS package providing an applet
+for the COSMIC Desktop Environment written in Rust using `libcosmic`.
+
+## Context
+
+You are an expert software architect and project analysis assistant. Analyze
+the current project directory and help developers that interacts with this
+project. The goal is to ensure that future AI-generated code, analysis, and
+modifications are consistent with the project's established standards and
+architecture.
+
+## Applet Directory Structure
+
+- `src/`: Rust source code.
+- `i18n/`: Fluent translation files.
+- `resources/`: Desktop entry, icons, and metainfo.
+
+## Key Applet Files
+
+- `Cargo.toml`: Rust package manifest.
+- `justfile`: Command runner configuration (build, run, install).
+- `src/app.rs`: Main application logic (Model-View-Update pattern).
+- `src/config.rs`: Configuration struct and loading.
+
+## Applet Development Environment
+
+**Important**: Development requires a Nix shell with specific library paths for
+Wayland and OpenGL.
+
+**Enter the Shell**:
+
+   ```bash
+   nix-shell
+   ```
+
+   This uses the `shell.nix` in the project root to configure `LD_LIBRARY_PATH`.
+
+### Applet Build and Run Commands
+
+- **Run locally**:
+
+  ```bash
+  just run
+  ```
+
+  *Note: This builds and runs the applet. Ensure you are in the `nix-shell`.*
+
+- **Build Release**:
+
+  ```bash
+  just build-release
+  ```
+
+- **Lint/Check**:
+
+  ```bash
+  just check
+  ```
+
+## Applet Architecture
+
+- **Framework**: `libcosmic` (based on `iced`).
+- **Pattern**: The Elm Architecture (Model, Message, Update, View).
+- **Interactions**:
+  - The applet displays an icon in the COSMIC panel.
+  - Clicking the icon triggers `Message::LaunchManagerApp`, which spawns
+  `alacritty -e curios-manager`.
+
+## Contributing
+
+- **Project Source**: [curios-manager-applet GitHub](https://github.com/CuriosLabs/curios-manager-applet)
+- **Contributing Policy**: See @CONTRIBUTING.md file.
+- **Branching Strategy**: For new features, create a branch named
+  `feature/<YourFeatureName>` (e.g., `git checkout -b feature/AmazingFeature`).

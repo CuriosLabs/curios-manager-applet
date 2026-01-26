@@ -1,0 +1,9 @@
+app-title = Curios Manager Applet
+about = About
+view = View
+welcome = Welcome to COSMIC! ✨
+page-id = Page { $num }
+git-description = Git commit {$hash} on {$date}
+example-row = Example Row
+curios-manager-row = CuriOS Manager
+about-row = About this machine

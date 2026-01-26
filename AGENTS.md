@@ -69,6 +69,16 @@ Wayland and OpenGL.
   - Clicking the icon triggers `Message::LaunchManagerApp`, which spawns
   `alacritty -e curios-manager`.
 
+## COSMIC Source References
+
+- [libcosmic](https://github.com/pop-os/libcosmic).
+- [libcosmic book](https://pop-os.github.io/libcosmic-book/introduction.html).
+- [cosmic-applet-template](https://github.com/pop-os/cosmic-applet-template).
+- [cosmic-applets](https://github.com/pop-os/cosmic-applets).
+- [COSMIC Widget module](https://pop-os.github.io/libcosmic/cosmic/widget/index.html).
+- [cosmic-icons](https://github.com/pop-os/cosmic-icons).
+- [COSMIC forecast app](https://github.com/cosmic-utils/forecast).
+
 ## Contributing
 
 - **Project Source**: [curios-manager-applet GitHub](https://github.com/CuriosLabs/curios-manager-applet)

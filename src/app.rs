@@ -30,6 +30,7 @@ pub enum Message {
     UpdateConfig(Config),
     LaunchManagerApp,
     LaunchAboutApp,
+    LaunchCosmicSettings,
 }
 
 /// Create a COSMIC application from the app model
@@ -105,7 +106,9 @@ impl cosmic::Application for AppModel {
             .padding(5)
             .spacing(0)
             .add(widget::button::text(fl!("curios-manager-row")).on_press(Message::LaunchManagerApp))
-            .add(widget::button::text(fl!("about-row")).on_press(Message::LaunchAboutApp));
+            .add(widget::button::text(fl!("about-row")).on_press(Message::LaunchAboutApp))
+            .add(widget::button::text(fl!("parameters-row")).on_press(Message::LaunchCosmicSettings))
+            ;
 
         self.core.applet.popup_container(content_list).into()
     }
@@ -194,6 +197,12 @@ impl cosmic::Application for AppModel {
                     .arg("--hold")
                     .arg("-e")
                     .arg("fastfetch")
+                    .spawn();
+            }
+            Message::LaunchCosmicSettings => {
+                // Launch cosmic-settings parameters.
+                let _ = std::process::Command::new("/run/current-system/sw/bin/cosmic-settings")
+                    .arg("desktop")
                     .spawn();
             }
         }

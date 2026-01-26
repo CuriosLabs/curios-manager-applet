@@ -7,3 +7,4 @@ git-description = Git commit {$hash} on {$date}
 example-row = Example Row
 curios-manager-row = CuriOS Manager
 about-row = About this machine
+parameters-row = System Preferences

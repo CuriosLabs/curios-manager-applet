@@ -3,10 +3,10 @@
 use crate::config::Config;
 use crate::fl;
 use cosmic::cosmic_config::{self, CosmicConfigEntry};
-use cosmic::iced::{window::Id, Limits, Subscription};
+use cosmic::iced::{window::Id, Alignment, Limits, Subscription};
 use cosmic::iced_winit::commands::popup::{destroy_popup, get_popup};
 use cosmic::prelude::*;
-use cosmic::widget;
+use cosmic::{cosmic_theme, theme, widget};
 use futures_util::SinkExt;
 
 /// The application model stores app-specific state used to describe its interface and
@@ -107,6 +107,8 @@ impl cosmic::Application for AppModel {
     /// See: https://pop-os.github.io/libcosmic/cosmic/widget/index.html
     /// See: https://github.com/pop-os/cosmic-icons/tree/master
     fn view_window(&self, _id: Id) -> Element<'_, Self::Message> {
+        let cosmic_theme::Spacing {space_m, .. } = theme::spacing();
+
         let about_button = widget::button::text(fl!("about-row"))
             .on_press(Message::LaunchAboutApp);
 
@@ -114,16 +116,19 @@ impl cosmic::Application for AppModel {
             .on_press(Message::LaunchCosmicSettings);
 
         let lock_button = widget::button::icon(widget::icon::from_name("system-lock-screen-symbolic"))
-            .on_press(Message::LockSession);
+            .on_press(Message::LockSession)
+            .large();
 
         let reboot_button = widget::button::icon(widget::icon::from_name("system-reboot-symbolic"))
-            .on_press(Message::RebootSystem);
+            .on_press(Message::RebootSystem)
+            .large();
 
         let shutdown_button = widget::button::icon(widget::icon::from_name("system-shutdown-symbolic"))
-            .on_press(Message::ShutdownSystem);
+            .on_press(Message::ShutdownSystem)
+            .large();
 
         let content_list = widget::list_column()
-            .padding(5)
+            .padding(8)
             .spacing(0)
             .add(widget::button::text(fl!("curios-manager-row")).on_press(Message::LaunchManagerApp))
             .add(widget::column()
@@ -132,8 +137,11 @@ impl cosmic::Application for AppModel {
             .add(widget::row()
                 .push(lock_button)
                 .push(reboot_button)
-                .push(shutdown_button))
-            ;
+                .push(shutdown_button)
+                .align_y(Alignment::Center)
+                .spacing(space_m)
+                .padding([0, space_m])
+                );
 
         self.core.applet.popup_container(content_list).into()
     }

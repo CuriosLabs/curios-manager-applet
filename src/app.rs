@@ -117,18 +117,15 @@ impl cosmic::Application for AppModel {
 
         let lock_button = widget::button::icon(widget::icon::from_name("system-lock-screen-symbolic"))
             .on_press(Message::LockSession)
-            .large()
-            ;
+            .large();
 
         let reboot_button = widget::button::icon(widget::icon::from_name("system-reboot-symbolic"))
             .on_press(Message::RebootSystem)
-            .large()
-            ;
+            .large();
 
         let shutdown_button = widget::button::icon(widget::icon::from_name("system-shutdown-symbolic"))
             .on_press(Message::ShutdownSystem)
-            .large()
-            ;
+            .large();
 
         let content_list = widget::list_column()
             .padding(8)
@@ -144,8 +141,7 @@ impl cosmic::Application for AppModel {
                 .align_y(Alignment::Center)
                 .spacing(space_m)
                 .padding([0, space_m])
-                )
-            ;
+                );
 
         self.core.applet.popup_container(content_list).into()
     }

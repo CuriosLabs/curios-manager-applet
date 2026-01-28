@@ -3,7 +3,7 @@
 { lib, stdenv, fetchFromGitHub, rustPlatform, just, libcosmicAppHook }:
 rustPlatform.buildRustPackage rec {
   pname = "curios-manager-applet";
-  version = "0.1.0";
+  version = "0.1.1";
 
   src = fetchFromGitHub {
     owner = "CuriosLabs";

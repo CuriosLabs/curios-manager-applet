@@ -1,6 +1,7 @@
 # CuriOS manager COSMIC applet
 
-{ lib, stdenv, fetchFromGitHub, rustPlatform, just, libcosmicAppHook }:
+{ lib, stdenv, fetchFromGitHub, pkg-config, rustPlatform, just, libcosmicAppHook
+, nix-update-script }:
 rustPlatform.buildRustPackage rec {
   pname = "curios-manager-applet";
   version = "0.1.1";
@@ -14,7 +15,7 @@ rustPlatform.buildRustPackage rec {
 
   cargoHash = "sha256-u1So+XOx/Urm08v7mBlaC4LQk1ckAzN8uXI2f4g6sQo=";
 
-  nativeBuildInputs = [ just libcosmicAppHook ];
+  nativeBuildInputs = [ pkg-config just libcosmicAppHook ];
 
   dontUseJustBuild = true;
   dontUseJustCheck = true;
@@ -27,6 +28,8 @@ rustPlatform.buildRustPackage rec {
     "bin-src"
     "target/${stdenv.hostPlatform.rust.cargoShortTarget}/release/${pname}"
   ];
+
+  passthru.updateScript = nix-update-script { };
 
   meta = {
     description = "CuriOS manager COSMIC applet";

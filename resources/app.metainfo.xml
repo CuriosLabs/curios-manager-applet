@@ -6,7 +6,7 @@
   <name>Curios Manager Applet</name>
   <summary>curios-manager TUI applet for COSMIC DE</summary>
   <icon type="remote" width="64" height="64" scale="1">
-    https://github.com/CuriosLabs/curios-manager-applet/raw/main/resources/icons/hicolor/scalable/apps/icon.svg
+    https://raw.githubusercontent.com/CuriosLabs/curios-manager-applet/refs/heads/main/resources/icon.svg
   </icon>
   <url type="vcs-browser">https://github.com/CuriosLabs/curios-manager-applet</url>
   <launchable type="desktop-id">dev.curioslabs.CuriosManagerApplet.desktop</launchable>

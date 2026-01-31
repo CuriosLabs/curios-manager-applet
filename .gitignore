@@ -5,6 +5,7 @@ debug/
 target/
 vendor/
 vendor.tar
+.obsidian/
 debian/*
 !debian/changelog
 !debian/control

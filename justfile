@@ -98,7 +98,7 @@ tag VERSION:
   git commit -a -m 'Release {{VERSION}}'
   git pull
   git tag -a {{VERSION}} -m 'Release {{VERSION}}'
-  git push origin {{VERSIONi}}
+  git push origin {{VERSION}}
 
 # Update the Nix package hash signature, commit and push to git.
 hash-update VERSION:

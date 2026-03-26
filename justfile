@@ -13,8 +13,9 @@ bin-src := 'target' / 'release' / name
 desktop-dst := base-dir / 'share' / 'applications' / appid + '.desktop'
 icon-dst := base-dir / 'share' / 'icons' / 'hicolor' / 'scalable' / 'apps' / appid + '.svg'
 
-# Default recipe which runs `just build-release`
-default: build-release
+# Default option list available recipes.
+default:
+  @just --list
 
 # Runs `cargo clean`
 clean:
@@ -43,6 +44,11 @@ check *args:
 
 # Runs a clippy check with JSON message format
 check-json: (check '--message-format=json')
+
+# Init rust on a NixOS machine for the first launch
+init:
+  rustup default stable
+  rustup update
 
 # Run the application for testing purposes
 run *args:

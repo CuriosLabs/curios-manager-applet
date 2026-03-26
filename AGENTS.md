@@ -24,26 +24,27 @@ architecture.
 - `justfile`: Command runner configuration (build, run, install).
 - `src/app.rs`: Main application logic (Model-View-Update pattern).
 - `src/config.rs`: Configuration struct and loading.
+- `shell.nix`: A Nix configuration file for the `nix-shell` command. It will setup
+a temporary environment with the specified dependencies, tools and configurations
+for the `just` command.
 
 ## Applet Development Environment
 
 **Important**: Development requires a Nix shell with specific library paths for
-Wayland and OpenGL.
+Wayland and OpenGL and to configure `LD_LIBRARY_PATH`.
 
 **Enter the Shell**:
 
    ```bash
-   nix-shell
+   nix-shell shell.nix
    ```
-
-   This uses the `shell.nix` in the project root to configure `LD_LIBRARY_PATH`.
 
 ### Applet Build and Run Commands
 
 - **Run locally**:
 
   ```bash
-  just run
+  nix-shell shell.nix --run "just run"
   ```
 
   *Note: This builds and runs the applet. Ensure you are in the `nix-shell`.*
@@ -51,13 +52,13 @@ Wayland and OpenGL.
 - **Build Release**:
 
   ```bash
-  just build-release
+  nix-shell shell.nix --run "just build-release"
   ```
 
 - **Lint/Check**:
 
   ```bash
-  just check
+  nix-shell shell.nix --run "just check"
   ```
 
 ## Applet Architecture

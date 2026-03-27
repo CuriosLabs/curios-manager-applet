@@ -9,10 +9,10 @@ use cosmic::prelude::*;
 use cosmic::{cosmic_theme, theme, widget};
 use futures_util::SinkExt;
 
-/// The application model stores app-specific state used to describe its interface and
+/// The applet stores app-specific state used to describe its interface and
 /// drive its logic.
 #[derive(Default)]
-pub struct AppModel {
+pub struct CuriosManagerApplet {
     /// Application state which is managed by the COSMIC runtime.
     core: cosmic::Core,
     /// The popup id.
@@ -36,8 +36,8 @@ pub enum Message {
     ShutdownSystem,
 }
 
-/// Create a COSMIC application from the app model
-impl cosmic::Application for AppModel {
+/// Create a COSMIC application from the applet model
+impl cosmic::Application for CuriosManagerApplet {
     /// The async executor that will be used to run your application's commands.
     type Executor = cosmic::executor::Default;
 
@@ -63,8 +63,8 @@ impl cosmic::Application for AppModel {
         core: cosmic::Core,
         _flags: Self::Flags,
     ) -> (Self, Task<cosmic::Action<Self::Message>>) {
-        // Construct the app model with the runtime's core.
-        let app = AppModel {
+        // Construct the applet with the runtime's core.
+        let app = CuriosManagerApplet {
             core,
             config: cosmic_config::Config::new(Self::APP_ID, Config::VERSION)
                 .map(|context| match Config::get_entry(&context) {

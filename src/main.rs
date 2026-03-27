@@ -12,5 +12,5 @@ fn main() -> cosmic::iced::Result {
     i18n::init(&requested_languages);
 
     // Starts the applet's event loop with `()` as the application's flags.
-    cosmic::applet::run::<app::AppModel>(())
+    cosmic::applet::run::<app::CuriosManagerApplet>(())
 }

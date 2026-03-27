@@ -72,11 +72,11 @@ vendor:
   cargo vendor --sync Cargo.toml | head -n -1 > .cargo/config.toml
   echo 'directory = "vendor"' >> .cargo/config.toml
   echo >> .cargo/config.toml
-  rm -rf .cargo vendor
+  #rm -rf .cargo vendor
 
 # Extracts vendored dependencies
 vendor-extract:
-  rm -rf vendor
+  #rm -rf vendor
   tar pxf vendor.tar
 
 # Complete publish process: lint, tag then build and update hash signature, finally push on github.

@@ -83,17 +83,18 @@ vendor-extract:
 publish VERSION:
   @if git rev-parse "{{VERSION}}" >/dev/null 2>&1; then echo "Warning: Tag {{VERSION}} already exists."; exit 1; fi
   git checkout testing
+  sed '0,/^version/s/^version.*/version = "{{VERSION}}"/' -i ./Cargo.toml
+  sed "s/version = \".*/version = \"{{VERSION}}\";/g" -i ./default.nix
+  sed "s#hash = \".*#hash = \"\";#g" -i ./default.nix
   cargo check
-  cargo clean
+  @just build-release
   @just tag {{VERSION}}
   sleep 5
   @just hash-update {{VERSION}}
 
 # Bump cargo version, create git commit, and create tag
 tag VERSION:
-  sed '0,/^version/s/^version.*/version = "{{VERSION}}"/' -i ./Cargo.toml
-  sed "s/version = \".*/version = \"{{VERSION}}\";/g" -i ./default.nix
-  sed "s#hash = \".*#hash = \"\";#g" -i ./default.nix
+  cargo clean
   git add Cargo.lock
   git commit -a -m 'Release {{VERSION}}'
   git pull

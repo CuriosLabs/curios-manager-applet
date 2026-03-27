@@ -94,7 +94,7 @@ publish VERSION:
 
 # Bump cargo version, create git commit, and create tag
 tag VERSION:
-  cargo clean
+  #cargo clean
   git add Cargo.lock
   git commit -a -m 'Release {{VERSION}}'
   git pull
@@ -106,7 +106,15 @@ hash-update VERSION:
   #!/usr/bin/env bash
   set -euxo pipefail
   HASH=`nix --extra-experimental-features nix-command hash convert --hash-algo sha256 "$(nix-prefetch-url --unpack https://github.com/{{owner}}/{{name}}/archive/{{VERSION}}.tar.gz)"`
-  sed "s#hash = \".*#hash = \"${HASH}\";#g" -i ./default.nix
-  git commit -a -m "Updated hash signature"
+  sed -i "s#hash = \".*#hash = \"${HASH}\";#g" ./default.nix
+  sed -i 's/cargoHash = ".*"/cargoHash = "";/' ./default.nix
+  CARGO_HASH=$(nix-build -E "(import <nixpkgs> {}).callPackage ./default.nix {}" 2>&1 | grep "got:" | cut -d: -f2- | xargs || true)
+  sed -i "s#cargoHash = \"\";#cargoHash = \"${CARGO_HASH}\";#" ./default.nix
+  git commit -a -m "release: update hashes for {{VERSION}}"
   git push
+
+# Remove Git tag locally and remotely
+removetag VERSION:
+  git tag -d {{VERSION}}
+  git push --delete origin {{VERSION}}
 

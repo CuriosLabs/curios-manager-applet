@@ -2,9 +2,11 @@
 *.pdb
 **/*.rs.bk
 debug/
+result/
 target/
 vendor/
 vendor.tar
+.obsidian/
 debian/*
 !debian/changelog
 !debian/control

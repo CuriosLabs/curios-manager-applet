@@ -7,7 +7,8 @@ curios-manager TUI applet for COSMIC DE
 A [justfile](./justfile) is included by default for the [casey/just][just]
 command runner.
 
-- `just` builds the application with the default `just build-release` recipe
+- `just` list all available recipes.
+- `just build-release` builds the application with the default parameters
 - `just run` builds and runs the application
 - `just install` installs the project into the system
 - `just vendor` creates a vendored tarball

@@ -9,10 +9,10 @@ use cosmic::prelude::*;
 use cosmic::{cosmic_theme, theme, widget};
 use futures_util::SinkExt;
 
-/// The application model stores app-specific state used to describe its interface and
+/// The applet stores app-specific state used to describe its interface and
 /// drive its logic.
 #[derive(Default)]
-pub struct AppModel {
+pub struct CuriosManagerApplet {
     /// Application state which is managed by the COSMIC runtime.
     core: cosmic::Core,
     /// The popup id.
@@ -36,8 +36,8 @@ pub enum Message {
     ShutdownSystem,
 }
 
-/// Create a COSMIC application from the app model
-impl cosmic::Application for AppModel {
+/// Create a COSMIC application from the applet model
+impl cosmic::Application for CuriosManagerApplet {
     /// The async executor that will be used to run your application's commands.
     type Executor = cosmic::executor::Default;
 
@@ -63,8 +63,8 @@ impl cosmic::Application for AppModel {
         core: cosmic::Core,
         _flags: Self::Flags,
     ) -> (Self, Task<cosmic::Action<Self::Message>>) {
-        // Construct the app model with the runtime's core.
-        let app = AppModel {
+        // Construct the applet with the runtime's core.
+        let app = CuriosManagerApplet {
             core,
             config: cosmic_config::Config::new(Self::APP_ID, Config::VERSION)
                 .map(|context| match Config::get_entry(&context) {
@@ -104,16 +104,19 @@ impl cosmic::Application for AppModel {
     /// The applet's popup window will be drawn using this view method. If there are
     /// multiple poups, you may match the id parameter to determine which popup to
     /// create a view for.
-    /// See: https://pop-os.github.io/libcosmic/cosmic/widget/index.html
-    /// See: https://github.com/pop-os/cosmic-icons/tree/master
+    /// See: <https://pop-os.github.io/libcosmic/cosmic/widget/index.html>
+    /// See: <https://github.com/pop-os/cosmic-icons/tree/master>
     fn view_window(&self, _id: Id) -> Element<'_, Self::Message> {
         let cosmic_theme::Spacing {space_m, .. } = theme::spacing();
 
-        let about_button = widget::button::text(fl!("about-row"))
+        let about_button = cosmic::applet::menu_button(widget::text::body(fl!("about-row")))
             .on_press(Message::LaunchAboutApp);
 
-        let parameters_button = widget::button::text(fl!("parameters-row"))
+        let parameters_button = cosmic::applet::menu_button(widget::text::body(fl!("parameters-row")))
             .on_press(Message::LaunchCosmicSettings);
+
+        let curios_manager_button = cosmic::applet::menu_button(widget::text::body(fl!("curios-manager-row")))
+            .on_press(Message::LaunchManagerApp);
 
         let lock_button = widget::button::icon(widget::icon::from_name("system-lock-screen-symbolic"))
             .on_press(Message::LockSession)
@@ -127,23 +130,22 @@ impl cosmic::Application for AppModel {
             .on_press(Message::ShutdownSystem)
             .large();
 
-        let content_list = widget::list_column()
-            .padding(8)
-            .spacing(0)
-            .add(widget::button::text(fl!("curios-manager-row")).on_press(Message::LaunchManagerApp))
-            .add(widget::column()
+        let content = widget::column()
+            .push(curios_manager_button)
+            .push(widget::column()
                 .push(parameters_button)
-                .push(about_button))
-            .add(widget::row()
+                .push(about_button)
+            )
+            .push(cosmic::applet::padded_control(widget::row()
                 .push(lock_button)
                 .push(reboot_button)
                 .push(shutdown_button)
                 .align_y(Alignment::Center)
                 .spacing(space_m)
-                .padding([0, space_m])
-                );
+                .padding([0, space_m])))
+            .padding([8, 0]);
 
-        self.core.applet.popup_container(content_list).into()
+        self.core.applet.popup_container(content).into()
     }
 
     /// Register subscriptions for this application.

@@ -24,7 +24,7 @@ clean:
 
 # Removes vendored dependencies
 clean-vendor:
-  rm -rf .cargo vendor vendor.tar
+  rm -rf .cargo vendor vendor.tar result
 
 # `cargo clean` and removes vendored dependencies
 clean-dist: clean clean-vendor

@@ -221,16 +221,13 @@ impl cosmic::Application for CuriosManagerApplet {
             }
             Message::LaunchManagerApp => {
                 // Launch the Curios manager TUI in a terminal
-                let _ = std::process::Command::new("/run/current-system/sw/bin/alacritty")
-                    .arg("-e")
+                let _ = std::process::Command::new("/run/current-system/sw/bin/xdg-terminal-exec")
                     .arg("curios-manager")
                     .spawn();
             }
             Message::LaunchAboutApp => {
                 // Launch the fastfetch a terminal
-                let _ = std::process::Command::new("/run/current-system/sw/bin/alacritty")
-                    .arg("--hold")
-                    .arg("-e")
+                let _ = std::process::Command::new("/run/current-system/sw/bin/xdg-terminal-exec")
                     .arg("fastfetch")
                     .spawn();
             }

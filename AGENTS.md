@@ -68,7 +68,7 @@ Wayland and OpenGL and to configure `LD_LIBRARY_PATH`.
 - **Interactions**:
   - The applet displays an icon in the COSMIC panel.
   - Clicking the icon triggers `Message::LaunchManagerApp`, which spawns
-  `alacritty -e curios-manager`.
+  `xdg-terminal-exec -e curios-manager`.
 
 ## COSMIC Source References
 

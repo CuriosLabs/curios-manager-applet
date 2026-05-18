@@ -4,13 +4,13 @@
 , nix-update-script }:
 rustPlatform.buildRustPackage rec {
   pname = "curios-manager-applet";
-  version = "0.2.1";
+  version = "0.2.2";
 
   src = fetchFromGitHub {
     owner = "CuriosLabs";
     repo = "curios-manager-applet";
     tag = "${version}";
-    hash = "sha256-mAx11HZ6D4XKrnwDNd5Ons24dUurn0cJ+rSCbD5R4Tg=";
+    hash = "";
   };
 
   cargoHash = "sha256-UQSPocgLACVOmOPkFvsxfNqdXQkGDmbU6B96QSOQeHs=";

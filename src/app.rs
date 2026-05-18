@@ -29,7 +29,6 @@ pub enum Message {
     SubscriptionChannel,
     UpdateConfig(Config),
     LaunchManagerApp,
-    LaunchAboutApp,
     LaunchCosmicSettings,
     LockSession,
     RebootSystem,
@@ -109,9 +108,6 @@ impl cosmic::Application for CuriosManagerApplet {
     fn view_window(&self, _id: Id) -> Element<'_, Self::Message> {
         let cosmic_theme::Spacing {space_m, .. } = theme::spacing();
 
-        let about_button = cosmic::applet::menu_button(widget::text::body(fl!("about-row")))
-            .on_press(Message::LaunchAboutApp);
-
         let parameters_button = cosmic::applet::menu_button(widget::text::body(fl!("parameters-row")))
             .on_press(Message::LaunchCosmicSettings);
 
@@ -131,10 +127,9 @@ impl cosmic::Application for CuriosManagerApplet {
             .large();
 
         let content = widget::column()
-            .push(curios_manager_button)
             .push(widget::column()
+                .push(curios_manager_button)
                 .push(parameters_button)
-                .push(about_button)
             )
             .push(cosmic::applet::padded_control(widget::row()
                 .push(lock_button)
@@ -223,12 +218,6 @@ impl cosmic::Application for CuriosManagerApplet {
                 // Launch the Curios manager TUI in a terminal
                 let _ = std::process::Command::new("/run/current-system/sw/bin/xdg-terminal-exec")
                     .arg("curios-manager")
-                    .spawn();
-            }
-            Message::LaunchAboutApp => {
-                // Launch the fastfetch a terminal
-                let _ = std::process::Command::new("/run/current-system/sw/bin/xdg-terminal-exec")
-                    .arg("fastfetch")
                     .spawn();
             }
             Message::LaunchCosmicSettings => {

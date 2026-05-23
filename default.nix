@@ -10,10 +10,10 @@ rustPlatform.buildRustPackage rec {
     owner = "CuriosLabs";
     repo = "curios-manager-applet";
     tag = "${version}";
-    hash = "sha256-V3IIuYkC3gjDmqF2UWwHhnnk4L5ztE0YauCbQBTKTQc=";
+    hash = "";
   };
 
-  cargoHash = "sha256-NCkY6OBuz3u/WRbB1z+rllvcYhYVmVvlWtx8J9YKfTc=";
+  cargoLock = { lockFile = ./Cargo.lock; };
 
   nativeBuildInputs = [ pkg-config just libcosmicAppHook ];
 

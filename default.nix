@@ -10,10 +10,13 @@ rustPlatform.buildRustPackage rec {
     owner = "CuriosLabs";
     repo = "curios-manager-applet";
     tag = "${version}";
-    hash = "sha256-eAO/sUfbgDlcW7EHU+c/Oy/vvs4W4CmrA7BApJ+6Y0U=";
+    hash = "";
   };
 
-  cargoLock = { lockFile = ./Cargo.lock; };
+  cargoLock = {
+    lockFile = ./Cargo.lock;
+    allowBuiltinFetchGit = true;
+  };
 
   nativeBuildInputs = [ pkg-config just libcosmicAppHook ];
 
@@ -30,6 +33,10 @@ rustPlatform.buildRustPackage rec {
   ];
 
   passthru.updateScript = nix-update-script { };
+
+  postPatch = ''
+    ln -s ${./Cargo.lock} Cargo.lock
+  '';
 
   meta = {
     description = "CuriOS manager COSMIC applet";

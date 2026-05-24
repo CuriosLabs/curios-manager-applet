@@ -10,7 +10,7 @@ rustPlatform.buildRustPackage rec {
     owner = "CuriosLabs";
     repo = "curios-manager-applet";
     tag = "${version}";
-    hash = "";
+    hash = "sha256-YVvYSKpKqWFDdhJhFqnuow8FTaHLMUpI6LGZUmuSeqk=";
   };
 
   cargoHash = "";

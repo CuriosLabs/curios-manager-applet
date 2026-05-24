@@ -110,7 +110,7 @@ hash-update VERSION:
   HASH=`nix --extra-experimental-features nix-command hash convert --hash-algo sha256 "$(nix-prefetch-url --unpack https://github.com/{{owner}}/{{name}}/archive/{{VERSION}}.tar.gz)"`
   sed -i "s#hash = \".*#hash = \"${HASH}\";#g" ./default.nix
   CARGO_HASH=$(nix-build -E "(import <nixpkgs> {}).callPackage ./default.nix {}" 2>&1 | grep "got:" | cut -d: -f2- | xargs || true)
-  sed -i "s#cargoHash = \"\"#cargoHash = \"${CARGO_HASH}\"#" ./default.nix
+  sed -i "s#cargoHash = \".*#cargoHash = \"${CARGO_HASH}\";#g" ./default.nix
   git commit -a -m "release: update hashes for {{VERSION}}"
   git push
 

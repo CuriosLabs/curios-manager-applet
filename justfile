@@ -86,7 +86,6 @@ publish VERSION:
   sed '0,/^version/s/^version.*/version = "{{VERSION}}"/' -i ./Cargo.toml
   sed "s/version = \".*/version = \"{{VERSION}}\";/g" -i ./default.nix
   sed "s#hash = \".*#hash = \"\";#g" -i ./default.nix
-  sed "s#cargoHash = \".*#cargoHash = \"\";#g" -i ./default.nix
   cargo check
   @just build-release
   @just tag {{VERSION}}
@@ -103,15 +102,13 @@ tag VERSION:
   git tag -a {{VERSION}} -m 'Release {{VERSION}}'
   git push origin {{VERSION}}
 
-# Update the Nix package hash signature, commit and push to git.
+# Update the Nix package source hash, commit and push to git.
 hash-update VERSION:
   #!/usr/bin/env bash
   set -euxo pipefail
-  HASH=`nix --extra-experimental-features nix-command hash convert --hash-algo sha256 "$(nix-prefetch-url --unpack https://github.com/{{owner}}/{{name}}/archive/{{VERSION}}.tar.gz)"`
+  HASH=$(nix --extra-experimental-features nix-command hash convert --hash-algo sha256 "$(nix-prefetch-url --unpack https://github.com/{{owner}}/{{name}}/archive/{{VERSION}}.tar.gz)")
   sed -i "s#hash = \".*#hash = \"${HASH}\";#g" ./default.nix
-  CARGO_HASH=$(nix-build -E "(import <nixpkgs> {}).callPackage ./default.nix {}" 2>&1 | grep "got:" | cut -d: -f2- | xargs || true)
-  sed -i "s#cargoHash = \".*#cargoHash = \"${CARGO_HASH}\";#g" ./default.nix
-  git commit -a -m "release: update hashes for {{VERSION}}"
+  git commit -a -m "release: update hash for {{VERSION}}"
   git push
 
 # Remove Git tag locally and remotely

@@ -1,6 +1,6 @@
 # CuriOS manager COSMIC applet
 
-{ lib, stdenv, fetchFromGitHub, pkg-config, rustPlatform, just, libcosmicAppHook
+{ lib, stdenv, fetchFromGitHub, fetchurl, pkg-config, rustPlatform, just, libcosmicAppHook
 , nix-update-script }:
 rustPlatform.buildRustPackage rec {
   pname = "curios-manager-applet";
@@ -14,7 +14,10 @@ rustPlatform.buildRustPackage rec {
   };
 
   cargoLock = {
-    lockFile = ./Cargo.lock;
+    lockFile = fetchurl {
+      url = "https://raw.githubusercontent.com/CuriosLabs/curios-manager-applet/${version}/Cargo.lock";
+      hash = "sha256-UMjQkogAnhiB3W6gOerqUUW4f/4nBsuEiYXCkrmEdCk=";
+    };
     allowBuiltinFetchGit = true;
   };
 

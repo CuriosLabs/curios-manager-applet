@@ -80,9 +80,10 @@ publish VERSION:
   git checkout testing
   sed '0,/^version/s/^version.*/version = "{{VERSION}}"/' -i ./Cargo.toml
   sed "s/version = \".*/version = \"{{VERSION}}\";/g" -i ./default.nix
-  sed "s#hash = \".*#hash = \"\";#g" -i ./default.nix
+  sed -i '/tag = "\${version}";/{n;s#hash = ".*"#hash = "";#}' ./default.nix
   cargo check
   @just build-release
+  CARGO_LOCK_HASH=$(openssl dgst -sha256 -binary Cargo.lock | base64) && sed -i '/Cargo.lock";/{n;s#hash = ".*"#hash = "sha256-'"${CARGO_LOCK_HASH}"'";#}' ./default.nix
   @just tag {{VERSION}}
   sleep 5
   @just hash-update {{VERSION}}
@@ -102,7 +103,7 @@ hash-update VERSION:
   #!/usr/bin/env bash
   set -euxo pipefail
   HASH=$(nix --extra-experimental-features nix-command hash convert --hash-algo sha256 "$(nix-prefetch-url --unpack https://github.com/{{owner}}/{{name}}/archive/{{VERSION}}.tar.gz)")
-  sed -i "s#hash = \".*#hash = \"${HASH}\";#g" ./default.nix
+  sed -i '/tag = "\${version}";/{n;s#hash = ".*"#hash = "'"${HASH}"'";#}' ./default.nix
   git commit -a -m "release: update hash for {{VERSION}}"
   git push
 

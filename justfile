@@ -46,11 +46,6 @@ check *args:
 # Runs a clippy check with JSON message format
 check-json: (check '--message-format=json')
 
-# Init rust on a NixOS machine for the first launch
-init:
-  rustup default stable
-  rustup update
-
 # Run the application for testing purposes
 run *args:
   env RUST_BACKTRACE=full cargo run --release {{args}}

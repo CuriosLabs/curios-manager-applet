@@ -6,10 +6,14 @@ pkgs.mkShell rec {
     pkg-config
     just
     libcosmicAppHook
+    gcc
   ];
 
   buildInputs = with pkgs; [
-    rustup
+    rustc
+    cargo
+    rustfmt
+    clippy
     cargo-c
 
     # Runtime dependencies which need to be in LD_LIBRARY_PATH

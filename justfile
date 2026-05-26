@@ -46,11 +46,6 @@ check *args:
 # Runs a clippy check with JSON message format
 check-json: (check '--message-format=json')
 
-# Init rust on a NixOS machine for the first launch
-init:
-  rustup default stable
-  rustup update
-
 # Run the application for testing purposes
 run *args:
   env RUST_BACKTRACE=full cargo run --release {{args}}
@@ -91,6 +86,7 @@ publish VERSION:
   @just tag {{VERSION}}
   sleep 5
   @just hash-update {{VERSION}}
+  @just clean
 
 # Bump cargo version, create git commit, and create tag
 tag VERSION:
@@ -101,16 +97,13 @@ tag VERSION:
   git tag -a {{VERSION}} -m 'Release {{VERSION}}'
   git push origin {{VERSION}}
 
-# Update the Nix package hash signature, commit and push to git.
+# Update the Nix package source hash, commit and push to git.
 hash-update VERSION:
   #!/usr/bin/env bash
   set -euxo pipefail
-  HASH=`nix --extra-experimental-features nix-command hash convert --hash-algo sha256 "$(nix-prefetch-url --unpack https://github.com/{{owner}}/{{name}}/archive/{{VERSION}}.tar.gz)"`
+  HASH=$(nix --extra-experimental-features nix-command hash convert --hash-algo sha256 "$(nix-prefetch-url --unpack https://github.com/{{owner}}/{{name}}/archive/{{VERSION}}.tar.gz)")
   sed -i "s#hash = \".*#hash = \"${HASH}\";#g" ./default.nix
-  sed -i 's/cargoHash = ".*"/cargoHash = ""/' ./default.nix
-  CARGO_HASH=$(nix-build -E "(import <nixpkgs> {}).callPackage ./default.nix {}" 2>&1 | grep "got:" | cut -d: -f2- | xargs || true)
-  sed -i "s#cargoHash = \"\"#cargoHash = \"${CARGO_HASH}\"#" ./default.nix
-  git commit -a -m "release: update hashes for {{VERSION}}"
+  git commit -a -m "release: update hash for {{VERSION}}"
   git push
 
 # Remove Git tag locally and remotely

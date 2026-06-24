@@ -61,6 +61,11 @@ install:
 uninstall:
   rm {{bin-dst}} {{desktop-dst}} {{icon-dst}}
 
+# Updates Cargo.lock and re-vendors dependencies
+update *args:
+  cargo update {{args}}
+  just vendor
+
 # Vendor dependencies locally
 vendor:
   mkdir -p .cargo

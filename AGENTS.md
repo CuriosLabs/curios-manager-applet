@@ -61,6 +61,17 @@ Wayland and OpenGL and to configure `LD_LIBRARY_PATH`.
   nix-shell shell.nix --run "just check"
   ```
 
+- **Update Dependencies**:
+
+  ```bash
+  nix-shell shell.nix --run "just update"
+  ```
+
+  *Note: Updates `Cargo.lock` and re-vendors dependencies. Pass `-p <crate>`
+  to update a single crate (e.g., `just update -p libcosmic`). Update deps
+  as a separate deliberate step before testing and committing, never as part
+  of the `publish` recipe, to keep releases deterministic.*
+
 ## Applet Architecture
 
 - **Framework**: `libcosmic` (based on `iced`).

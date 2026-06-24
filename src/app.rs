@@ -3,11 +3,11 @@
 use crate::config::Config;
 use crate::fl;
 use cosmic::cosmic_config::{self, CosmicConfigEntry};
-use cosmic::iced::{window::Id, Alignment, Limits, Subscription};
-use cosmic::iced_winit::commands::popup::{destroy_popup, get_popup};
+use cosmic::iced::platform_specific::shell::wayland::commands::popup::{destroy_popup, get_popup};
+use cosmic::iced::{futures, window::Id, Alignment, Limits, Subscription};
 use cosmic::prelude::*;
 use cosmic::{cosmic_theme, theme, widget};
-use futures_util::SinkExt;
+use futures::SinkExt;
 
 /// The applet stores app-specific state used to describe its interface and
 /// drive its logic.
@@ -126,12 +126,12 @@ impl cosmic::Application for CuriosManagerApplet {
             .on_press(Message::ShutdownSystem)
             .large();
 
-        let content = widget::column()
-            .push(widget::column()
+        let content = widget::Column::new()
+            .push(widget::Column::new()
                 .push(curios_manager_button)
                 .push(parameters_button)
             )
-            .push(cosmic::applet::padded_control(widget::row()
+            .push(cosmic::applet::padded_control(widget::Row::new()
                 .push(lock_button)
                 .push(reboot_button)
                 .push(shutdown_button)
@@ -150,18 +150,15 @@ impl cosmic::Application for CuriosManagerApplet {
     /// activated by selectively appending to the subscription batch, and will
     /// continue to execute for the duration that they remain in the batch.
     fn subscription(&self) -> Subscription<Self::Message> {
-        struct MySubscription;
-
         Subscription::batch(vec![
             // Create a subscription which emits updates through a channel.
-            Subscription::run_with_id(
-                std::any::TypeId::of::<MySubscription>(),
-                cosmic::iced::stream::channel(4, move |mut channel| async move {
+            Subscription::run(|| {
+                cosmic::iced::stream::channel(4, move |mut channel: futures::channel::mpsc::Sender<_>| async move {
                     _ = channel.send(Message::SubscriptionChannel).await;
 
-                    futures_util::future::pending().await
-                }),
-            ),
+                    futures::future::pending().await
+                })
+            }),
             // Watch for application configuration changes.
             self.core()
                 .watch_config::<Config>(Self::APP_ID)
@@ -248,7 +245,7 @@ impl cosmic::Application for CuriosManagerApplet {
         Task::none()
     }
 
-    fn style(&self) -> Option<cosmic::iced_runtime::Appearance> {
+    fn style(&self) -> Option<cosmic::iced::theme::Style> {
         Some(cosmic::applet::style())
     }
 }

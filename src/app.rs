@@ -156,7 +156,7 @@ impl cosmic::Application for CuriosManagerApplet {
                 cosmic::iced::stream::channel(4, move |mut channel: futures::channel::mpsc::Sender<_>| async move {
                     _ = channel.send(Message::SubscriptionChannel).await;
 
-                    futures::future::pending().await
+                    futures::future::pending::<()>().await;
                 })
             }),
             // Watch for application configuration changes.

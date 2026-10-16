@@ -245,7 +245,4 @@ impl cosmic::Application for CuriosManagerApplet {
         Task::none()
     }
 
-    fn style(&self) -> Option<cosmic::iced::theme::Style> {
-        Some(cosmic::applet::style())
-    }
 }
